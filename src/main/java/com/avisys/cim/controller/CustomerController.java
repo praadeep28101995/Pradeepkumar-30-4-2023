@@ -5,7 +5,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,5 +62,13 @@ public class CustomerController {
 		}
 		return new ResponseEntity<ApiResponse>(new ApiResponse("Mobile Number is already exist", false), HttpStatus.OK);
 
+	}
+	
+	
+	@DeleteMapping("/{mobileNumber}")
+	public String deleteByMobileNumber(@PathVariable String mobileNumber){
+		Optional<Customer> findByMobileNumber = customerRepository.findByMobileNumber(mobileNumber);
+		findByMobileNumber.ifPresent(customer->customerRepository.delete(customer));
+		return "Customer Deleted Successfully";
 	}
 }
