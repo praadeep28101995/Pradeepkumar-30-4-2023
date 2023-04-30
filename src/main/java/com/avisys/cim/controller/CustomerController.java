@@ -1,15 +1,13 @@
 package com.avisys.cim.controller;
 
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.avisys.cim.Customer;
 import com.avisys.cim.repository.CustomerRepository;
 
 @RestController
@@ -20,27 +18,33 @@ public class CustomerController {
 	private CustomerRepository customerRepository;
 
 	@GetMapping
-	public List<Customer> getCustomers(@RequestParam(required = false) String firstName,
+	public ResponseEntity<?> getCustomers(@RequestParam(required = false) String firstName,
 			@RequestParam(required = false) String lastName, @RequestParam(required = false) String mobileNumber) {
 		if (firstName != null && lastName != null && mobileNumber != null) {
-			return customerRepository.findByFirstNameContainingAndLastNameContainingAndMobileNumber(firstName,
-					lastName, mobileNumber);
+			return new ResponseEntity<>(customerRepository
+					.findByFirstNameContainingAndLastNameContainingAndMobileNumber(firstName, lastName, mobileNumber),
+					HttpStatus.OK);
 		} else if (firstName != null && lastName != null) {
-			return customerRepository.findByFirstNameContainingAndLastNameContaining(firstName, lastName);
+			return new ResponseEntity<>(
+					customerRepository.findByFirstNameContainingAndLastNameContaining(firstName, lastName),
+					HttpStatus.OK);
 		} else if (firstName != null && mobileNumber != null) {
-			return customerRepository.findByFirstNameContainingAndMobileNumber(firstName, mobileNumber);
+			return new ResponseEntity<>(
+					customerRepository.findByFirstNameContainingAndMobileNumber(firstName, mobileNumber),
+					HttpStatus.OK);
 		} else if (lastName != null && mobileNumber != null) {
-			return customerRepository.findByLastNameContainingAndMobileNumber(lastName, mobileNumber);
+			return new ResponseEntity<>(
+					customerRepository.findByLastNameContainingAndMobileNumber(lastName, mobileNumber), HttpStatus.OK);
 		} else if (firstName != null) {
-			return customerRepository.findByFirstNameContaining(firstName);
+			return new ResponseEntity<>(customerRepository.findByFirstNameContaining(firstName), HttpStatus.OK);
 		} else if (lastName != null) {
-			return customerRepository.findByLastNameContaining(lastName);
+			return new ResponseEntity<>(customerRepository.findByLastNameContaining(lastName), HttpStatus.OK);
 		} else if (mobileNumber != null) {
-			return customerRepository.findByMobileNumber(mobileNumber);
+			return new ResponseEntity<>(customerRepository.findByMobileNumber(mobileNumber), HttpStatus.OK);
 		} else {
-			return customerRepository.findAll();
+			return new ResponseEntity<>(customerRepository.findAll(), HttpStatus.OK);
 		}
 	}
 
+	
 }
-

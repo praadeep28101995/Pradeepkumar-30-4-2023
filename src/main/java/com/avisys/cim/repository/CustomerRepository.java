@@ -1,7 +1,7 @@
 package com.avisys.cim.repository;
 
-
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -21,5 +21,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 	List<Customer> findByLastNameContaining(String lastName);
 
-	List<Customer> findByMobileNumber(String mobileNumber);
+	Optional<Customer> findByMobileNumber(String mobileNumber);
 }
