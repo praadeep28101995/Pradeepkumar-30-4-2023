@@ -1,13 +1,18 @@
 package com.avisys.cim.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.avisys.cim.Customer;
 import com.avisys.cim.repository.CustomerRepository;
 
 @RestController
@@ -46,5 +51,14 @@ public class CustomerController {
 		}
 	}
 
-	
+	@PostMapping
+	public ResponseEntity<ApiResponse> createCustomer(@RequestBody Customer customer) {
+		Optional<Customer> optional = customerRepository.findByMobileNumber(customer.getMobileNumber());
+		if (!optional.isPresent()) {
+			customerRepository.save(customer);
+			return new ResponseEntity<ApiResponse>(new ApiResponse("customer added", true), HttpStatus.OK);
+		}
+		return new ResponseEntity<ApiResponse>(new ApiResponse("Mobile Number is already exist", false), HttpStatus.OK);
+
+	}
 }
