@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.avisys.cim.Customer;
 import com.avisys.cim.repository.CustomerRepository;
+
+import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/customers")
@@ -71,4 +74,31 @@ public class CustomerController {
 		findByMobileNumber.ifPresent(customer->customerRepository.delete(customer));
 		return "Customer Deleted Successfully";
 	}
+	@DeleteMapping("/{id}/mobile")
+	public ResponseEntity<String> deleteMobileNumber(@PathVariable Long id) {
+	    Optional<Customer> optionalCustomer = customerRepository.findById(id);
+	    if (optionalCustomer.isPresent()) {
+	        Customer customer = optionalCustomer.get();
+	        customer.setMobileNumber("");
+	        customerRepository.save(customer);
+	        return ResponseEntity.ok("Mobile number deleted successfully.");
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
+	@PutMapping("/{id}/mobile")
+	public ResponseEntity<String> deleteMobileNumber(@PathVariable Long id,@RequestBody String mobileNumber) {
+		System.out.println(id);
+	    Optional<Customer> optionalCustomer = customerRepository.findById(id);
+	    if (optionalCustomer.isPresent()) {
+	        Customer customer = optionalCustomer.get();
+	        customer.setMobileNumber(mobileNumber);
+	        customerRepository.save(customer);
+	        return ResponseEntity.ok("Mobile number added successfully.");
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
 }
